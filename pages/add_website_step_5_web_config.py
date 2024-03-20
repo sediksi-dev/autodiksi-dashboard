@@ -295,19 +295,26 @@ def main():
     update_config()
 
     # Menentukan apakah tombol navigasi selanjutnya harus dinonaktifkan berdasarkan apakah semua input telah diisi
-    nav(
-        prev={"target": "add_website_step_4_config_target.py"},
-        next={
-            "target": "add_website_step_6_review.py",
-            "config": {"disabled": button_disabled},
-        },
-    )
 
     if target_config_exist:
         st.write("Konfigurasi web target sudah ada, lanjutkan ke tahap berikutnya")
         nav(
+            prev={
+                "target": "add_website_step_4_config_target.py",
+                "config": {"key": "prev_key_button_if_config_exist"},
+            },
+            next={
+                "target": "add_website_step_6_review.py",
+                "config": {"key": "next_key_button_if_config_exist"},
+            },
+        )
+    else:
+        nav(
             prev={"target": "add_website_step_4_config_target.py"},
-            next={"target": "add_website_step_6_review.py"},
+            next={
+                "target": "add_website_step_6_review.py",
+                "config": {"disabled": button_disabled},
+            },
         )
 
 

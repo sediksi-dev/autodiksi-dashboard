@@ -107,7 +107,7 @@ def add_web():
 def add_config(target_id):
     auth_username = config.get("target_auth_user")
     auth_token = config.get("target_auth")
-    mode = config.get("rewrite_mode", "manual")
+    mode = config.get("rewrite_mode", "default")
     post_status = config.get("post_status", "draft")
 
     web_config = {
