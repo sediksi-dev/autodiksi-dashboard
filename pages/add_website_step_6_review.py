@@ -132,15 +132,15 @@ def add_taxonomies(source_id, target_id):
         src_res = supa.add_taxonomies(
             source_id,
             {
-                "taxonomy_id": trg["id"],
-                "taxonomy_name": trg["slug"],
+                "taxonomy_id": src["id"],
+                "taxonomy_name": src["slug"],
             },
         )
         trg_res = supa.add_taxonomies(
             target_id,
             {
-                "taxonomy_id": src["id"],
-                "taxonomy_name": src["slug"],
+                "taxonomy_id": trg["id"],
+                "taxonomy_name": trg["slug"],
             },
         )
         results.append({"source": src_res, "target": trg_res})
