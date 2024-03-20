@@ -154,13 +154,23 @@ class SupaAddWebHandler(Supabase):
             .execute()
         )
 
-        target_data = target[1][0]
-        target_id = target_data.get("id")
+        if len(target[1]) == 0 and len(source[1]) == 0:
+            return None, None, None
 
-        web_config = self.get_target_web_config(target_id)
-        # web_config = target_id
+        if len(source[1]) > 0:
+            source_data = source[1][0]
+        else:
+            source_data = None
 
-        return source[1][0], target_data, web_config
+        if len(target) > 0:
+            target_data = target[1][0]
+            target_id = target_data.get("id")
+            web_config = self.get_target_web_config(target_id)
+        else:
+            target_data = None
+            web_config = None
+
+        return source_data, target_data, web_config
 
     def get_target_web_config(self, web_id):
         result, _ = (
