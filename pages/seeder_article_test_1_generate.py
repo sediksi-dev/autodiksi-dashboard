@@ -43,9 +43,10 @@ if article:
     full_article = image_css + f"# {article['title']}\n\n{article['article']}"
     view, raw = st.tabs(["View Article", "Raw"])
     view.markdown(full_article, unsafe_allow_html=True)
-    raw.code(article["article"], line_numbers=False, language="markdown")
+    with raw.container(height=400) as raw:
+        st.code(article["article"], line_numbers=False, language="markdown")
 else:
-    with st.status("Generated Article", state="running"):
+    with st.status("Generating Article", state="running"):
         response = requests.post(
             full_url,
             auth=HTTPBasicAuth(username, password),

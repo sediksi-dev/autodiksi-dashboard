@@ -30,22 +30,24 @@ with st.form(key="__article_seeder_form__"):
         "Keyword",
         placeholder="Masukkan keyword yang ingin diuji",
         key="__keyword__",
-        value=st.session_state.keyword,
+        value=seeder.get("keyword"),
     )
     language = st.selectbox(
         "Bahasa",
         ["Indonesia", "Inggris"],
         key="__language__",
-        index=0 if st.session_state.language == "Indonesia" else 1,
+        index=0 if seeder.get("language") == "Indonesia" else 1,
     )
     generate = st.form_submit_button(
         "Generate",
         use_container_width=True,
         type="primary",
-        disabled=keyword == "",
     )
 
 if generate:
+    if keyword == "":
+        st.warning("Keyword tidak boleh kosong")
+        st.stop()
     update_text_input("keyword")
     update_text_input("language")
     generating()
