@@ -14,6 +14,7 @@ def likrea_article_generator():
     st.sidebar.divider()
     st.sidebar.subheader("Keyword Seeder")
     st.sidebar.page_link("pages/seeder_article_test.py", label="Generator Artikel")
+    st.sidebar.page_link("pages/seeder_0_main.py", label="Tambah Keywords")
     st.sidebar.divider()
 
 

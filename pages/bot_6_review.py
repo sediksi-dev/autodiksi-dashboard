@@ -2,7 +2,6 @@ import streamlit as st
 from utils.page_header import page_header
 from utils.state.bot import WebTarget, WebSource, WebConfig
 from utils.navigation_button import navigation_button as nav, NavigationButton
-from utils.supabase import SupaAddWebHandler
 
 st.set_page_config(
     page_title="Pengaturan Publish - AGC Likrea Assistant",
@@ -17,7 +16,6 @@ page_header(
 source = WebSource()
 target = WebTarget()
 config = WebConfig()
-supa = SupaAddWebHandler()
 
 
 def get_cat_by_slug(slug, data):
