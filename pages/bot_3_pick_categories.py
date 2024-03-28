@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 from utils.page_header import page_header
-from utils.navigation_button import navigation_button as nav
-from utils.state.source import WebSource as Source
+from utils.navigation_button import navigation_button as nav, NavigationButton
+from utils.state.bot import WebSource
 
 st.set_page_config(
     page_title="Pilih kategori - AGC Likrea Assistant",
@@ -15,7 +15,7 @@ page_header(
 )
 
 
-source = Source()
+source = WebSource()
 
 
 def show_dataframe():
@@ -76,13 +76,14 @@ with st.expander("Lihat Semua Kategori", expanded=True):
     show_dataframe()
 
 nav(
-    prev={
-        "target": "add_website_step_1_check_sources.py",
-    },
-    next={
-        "target": "add_website_step_4_config_target.py",
-        "type": "primary",
-        "config": {"disabled": len(selected) == 0},
-        "callbacks": lambda: save_categories(selected),
-    },
+    prev=NavigationButton(
+        target="bot_1_check_sources.py",
+    ),
+    next=NavigationButton(
+        text="Selanjutnya",
+        target="bot_4_config_target.py",
+        type="primary",
+        callbacks=lambda: save_categories(selected),
+        config={"disabled": len(selected) == 0},
+    ),
 )

@@ -11,33 +11,26 @@ def perform_request(endpoint):
 
 
 def check_is_wp(source):
-    excluded_post_types = [
-        "page",
-        "attachment",
-        "nav_menu_item",
-        "wp_block",
-        "wp_template",
-        "wp_template_part",
-        "wp_navigation",
-    ]
-
     try:
         # Check if the site is a WordPress site
-        perform_request(f"https://{source}/wp-json/wp/v2")
+        json_endpoint = perform_request(f"https://{source}/wp-json/wp/v2")
+        if not json_endpoint or json_endpoint in ["", None, False]:
+            raise Exception("Situs ini bukan situs WordPress")
+        posts = perform_request(f"https://{source}/wp-json/wp/v2/posts")
+        if not posts or len(posts) == 0 or posts in ["", None, False]:
+            raise Exception(
+                "Situs adalah situs WordPress tetapi tidak memiliki postingan"
+            )
 
-        # Get the post types
-        post_types = perform_request(f"https://{source}/wp-json/wp/v2/types")
-        results = [
-            {
-                "slug": post_types[post_type]["slug"],
-                "endpoint": f"https://{source}/wp-json/wp/v2/{post_types[post_type]['rest_base']}",
-            }
-            for post_type in post_types
-            if post_type not in excluded_post_types
-        ]
-        return results
+        categories = perform_request(f"https://{source}/wp-json/wp/v2/categories")
+        if not categories or len(categories) == 0 or categories in ["", None, False]:
+            raise Exception(
+                "Situs adalah situs Wordpress, tetapi tidak memiliki kategori yang dapat diambil"
+            )
+
+        return True
     except Exception as e:
-        raise Exception(f"Error checking WordPress site: {str(e)}")
+        raise Exception(f"Error ketika mengecek situs: {str(e)}")
 
 
 def get_example_content(endpoint):

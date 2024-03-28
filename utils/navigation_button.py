@@ -1,35 +1,43 @@
 import streamlit as st
+from pydantic import BaseModel
+from typing import Literal, Callable
 
 
-def navigation_button(prev=None, next=None, **kwargs):
+class NavigationButton(BaseModel):
+    text: str = "Sebelumnya"
+    target: str = ""
+    config: dict = {}  # button config
+    type: Literal["primary", "secondary"] = "secondary"
+    callbacks: Callable = None
+
+
+def navigation_button(prev: NavigationButton = None, next: NavigationButton = None):
     col1, col2 = st.columns([1, 1])
     if prev:
-        prev_text = prev.get("text", "Sebelumnya")
-        prev_config = prev.get("config", {})
-        prev_target = prev.get("target", "")
-        prev_btn_type = prev.get("type", "secondary")
-        prev_callbacks = prev.get("callbacks", None)
         prev_button = col1.button(
-            prev_text, use_container_width=True, type=prev_btn_type, **prev_config
+            prev.text,
+            use_container_width=True,
+            type=prev.type,
+            key="prev_button",
+            **prev.config,
         )
         if prev_button:
-            if prev_callbacks:
-                prev_callbacks()
-            st.switch_page(f"pages/{prev_target}")
+            if prev.callbacks:
+                prev.callbacks()
+            st.switch_page(f"pages/{prev.target}")
 
     if next:
-        next_text = next.get("text", "Selanjutnya")
-        next_target = next.get("target", "")
-        next_config = next.get("config", {})
-        next_btn_type = next.get("type", "primary")
-        next_callbacks = next.get("callbacks", None)
         next_button = col2.button(
-            next_text, use_container_width=True, type=next_btn_type, **next_config
+            next.text,
+            use_container_width=True,
+            type=next.type,
+            key="next_button",
+            **next.config,
         )
         if next_button:
-            if next_callbacks:
-                next_callbacks()
-            st.switch_page(f"pages/{next_target}")
+            if next.callbacks:
+                next.callbacks()
+            st.switch_page(f"pages/{next.target}")
 
     return (
         col1,

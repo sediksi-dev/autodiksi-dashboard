@@ -5,7 +5,7 @@ def bot_likrea_section():
     st.sidebar.divider()
     st.sidebar.subheader("Artikel Bot")
     st.sidebar.page_link("pages/list_websites.py", label="Daftar Situs")
-    st.sidebar.page_link("pages/add_website_main.py", label="Tambah Situs")
+    st.sidebar.page_link("pages/bot_0_main.py", label="Tambah Situs")
     st.sidebar.page_link("pages/article_queue.py", label="Antrian Artikel")
     st.sidebar.page_link("pages/error_processed.py", label="Artikel Gagal Diproses")
 
@@ -13,6 +13,9 @@ def bot_likrea_section():
 def likrea_article_generator():
     st.sidebar.divider()
     st.sidebar.subheader("Keyword Seeder")
+    st.sidebar.page_link(
+        "pages/keyword_seeder_article_test.py", label="Generator Artikel"
+    )
     st.sidebar.divider()
 
 
