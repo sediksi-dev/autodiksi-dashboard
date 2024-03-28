@@ -145,6 +145,15 @@ def add_web_config(source_id: int, target_id: int):
                     }
                 )
             )
+    web_config.append(
+        WebConfigData.model_validate(
+            {
+                "key": "rewrite_mode",
+                "value": "default",
+                "web_id": target_id,
+            }
+        )
+    )
 
     return supa.add(web_config)
 
