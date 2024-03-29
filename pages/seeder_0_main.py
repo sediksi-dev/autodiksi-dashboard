@@ -1,5 +1,7 @@
 import streamlit as st
+import pandas as pd
 from utils.page_header import page_header
+from utils.state.seeder import SeederKeywords
 
 st.set_page_config(
     page_title="Keyword Seeder - AGC Likrea Asisstant",
@@ -12,8 +14,32 @@ page_header(
 )
 
 
+seeder = SeederKeywords()
+seeder.start()
+
+
 table_file = st.file_uploader(
-    "Unggah file CSV atau Excel",
-    type=["csv", "xlsx", "xls"],
-    help="Upload file CSV atau Excel berisi kata kunci yang ingin ditambahkan ke antrian artikel. File harus memiliki kolom `keyword`",
+    "Unggah file CSV dengan kolom `keywords`",
+    type=["csv"],
+    help="Upload file CSV berisi kata kunci yang ingin ditambahkan ke antrian artikel. File harus memiliki kolom `keywords`",
 )
+
+if table_file is not None:
+    df = pd.read_csv(table_file)
+    keywords = df["keywords"].tolist()
+    seeder.set("keywords", keywords)
+
+
+def reset_keywords():
+    seeder.reset()
+
+
+if len(seeder.get("keywords")) > 0:
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.button("Reset Keywords", on_click=seeder.reset, use_container_width=True)
+    with col2:
+        next_button = st.button("Selanjutnya", use_container_width=True, type="primary")
+
+    if next_button:
+        st.switch_page("pages/seeder_1_webtarget.py")

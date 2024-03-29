@@ -57,3 +57,30 @@ class SingleSeedArticle(SeederState):
                 "article_data": None,
             },
         )
+
+
+class SeederKeywords(SeederState):
+    def __init__(self):
+        super().__init__(
+            "seeder_keywords",
+            {
+                "keywords": [],
+                "config": {
+                    "language": "",
+                    "start_date": "",
+                    "post_interval": 0,
+                    "rewrite_mode": "default",
+                    "target_web_url": "",
+                    "target_web_username": "",
+                    "target_web_password": "",
+                },
+            },
+        )
+
+    def get_config(self, key: str):
+        return self.get("config")[key]
+
+    def set_config(self, key: str, value: Any):
+        config = self.get("config")
+        config[key] = value
+        self.set("config", config)

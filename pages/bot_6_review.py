@@ -51,29 +51,6 @@ def get_mapping_columns():
                 "source": src_data,
                 "target": trg_data,
             }
-    # for map in mapping:
-    #     src = get_cat_by_slug(map["source"], source_cat)
-    #     trg = get_cat_by_slug(map["target"], target_cat)
-
-    #     src_data = {
-    #         "name": src["name"],
-    #         "slug": src["slug"],
-    #         "id": src["id"],
-    #     }
-
-    #     trg_data = {
-    #         "name": trg["name"],
-    #         "slug": trg["slug"],
-    #         "id": trg["id"],
-    #     }
-
-    #     yield {
-    #         "source": src_data,
-    #         "target": trg_data,
-    #     }
-
-    # if mapping is None:
-    #     return []
 
 
 source_url = source.get("url")
