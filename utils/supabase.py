@@ -210,3 +210,80 @@ class SupaListWebHandler(Supabase):
             self._client.table("articles").select("*").eq("status", status).execute()
         )
         return articles[1]
+
+
+class SupaSeedTarget(Supabase):
+    def add(self, data: dict):
+        try:
+            response = self._client.table("seed_target").insert(data).execute()
+            return response.data
+        except Exception as e:
+            return str(e)
+
+    def getAll(self):
+        try:
+            response = self._client.table("seed_target").select("*").execute()
+            return response.data
+        except Exception as e:
+            return str(e)
+
+
+class SupaSeedTaxonomy(Supabase):
+    def check(self, taxonomy_id: int, target_id: int):
+        try:
+            response = (
+                self._client.table("seed_taxonomies")
+                .select("*")
+                .eq("taxonomy_id", taxonomy_id)
+                .eq("target_id", target_id)
+                .maybe_single()
+                .execute()
+            )
+            return response.data
+        except Exception:
+            return False
+
+    def add(self, data: dict, target_id: int = 0):
+        if target_id != 0:
+            is_exist = self.check(data["taxonomy_id"], target_id)
+        else:
+            is_exist = False
+
+        if is_exist:
+            return is_exist
+        try:
+            data = {**data, "target_id": target_id}
+            response = self._client.table("seed_taxonomies").insert(data).execute()
+            return response.data[0]
+        except Exception as e:
+            return str(e)
+
+    def getAll(self):
+        try:
+            response = self._client.table("seed_taxonomies").select("*").execute()
+            return response.data
+        except Exception as e:
+            return str(e)
+
+
+class SupaSeedKeywords(Supabase):
+    def add(self, data: dict):
+        try:
+            response = self._client.table("seed_keywords").insert(data).execute()
+            return response.data
+        except Exception as e:
+            return str(e)
+
+    def addBulk(self, data: List[dict]):
+        try:
+            response = self._client.table("seed_keywords").insert(data).execute()
+            return response.data
+        except Exception as e:
+            return str(e)
+
+    def getAll(self):
+        try:
+            response = self._client.table("seed_keywords").select("*").execute()
+            return response.data
+        except Exception as e:
+            return str(e)

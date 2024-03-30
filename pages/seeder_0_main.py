@@ -16,7 +16,7 @@ page_header(
 
 seeder = SeederKeywords()
 seeder.start()
-
+st.cache_data.clear()
 
 table_file = st.file_uploader(
     "Unggah file CSV dengan kolom `keywords`",
@@ -42,4 +42,4 @@ if len(seeder.get("keywords")) > 0:
         next_button = st.button("Selanjutnya", use_container_width=True, type="primary")
 
     if next_button:
-        st.switch_page("pages/seeder_1_webtarget.py")
+        st.switch_page("pages/seeder_1_config.py")

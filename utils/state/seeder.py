@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime
 from typing import Dict, Any
 
 
@@ -8,6 +9,14 @@ class SeederState:
         self._default_value = default_value
         if key not in st.session_state:
             st.session_state[self.role] = {}
+
+    def is_default(self):
+        if self.role not in st.session_state:
+            return True
+        elif len(st.session_state[self.role]) == 0:
+            return True
+        else:
+            return False
 
     def start(self):
         st.session_state[self.role] = self._default_value
@@ -59,6 +68,20 @@ class SingleSeedArticle(SeederState):
         )
 
 
+class SeederTarget(SeederState):
+    def __init__(self):
+        super().__init__(
+            "seeder_target",
+            {
+                "url": "",
+                "username": "",
+                "password": "",
+                "api_endpoint": "wp-json/wp/v2",
+                "post_type": "posts",
+            },
+        )
+
+
 class SeederKeywords(SeederState):
     def __init__(self):
         super().__init__(
@@ -66,14 +89,19 @@ class SeederKeywords(SeederState):
             {
                 "keywords": [],
                 "config": {
-                    "language": "",
-                    "start_date": "",
-                    "post_interval": 0,
+                    "target_id": None,
+                    "language": "Indonesia",
+                    "start_date": datetime.datetime.now().date(),
+                    "time_skip_start": datetime.time(7, 0, 0),
+                    "time_skip_end": datetime.time(21, 0, 0),
+                    "post_interval": 60,
+                    "random_interval": 10,
                     "rewrite_mode": "default",
-                    "target_web_url": "",
-                    "target_web_username": "",
-                    "target_web_password": "",
+                    "publish_status": "draft",
+                    "categories": [],
+                    "selected_category": 0,
                 },
+                "data": None,
             },
         )
 
