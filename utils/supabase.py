@@ -287,3 +287,23 @@ class SupaSeedKeywords(Supabase):
             return response.data
         except Exception as e:
             return str(e)
+
+    def getAllWithChildren(self, status: str = None):
+        query = (
+            "keywords",
+            "rewrite_date",
+            "rewrite_mode",
+            "status",
+            "language",
+            "web: target_id!inner(url,username)",
+            "taxonomy: tax_id!inner(taxonomy_name)",
+        )
+
+        try:
+            response = self._client.table("seed_keywords").select(*query)
+            if status:
+                response = response.eq("status", status)
+            response = response.execute()
+            return response.data
+        except Exception as e:
+            return str(e)
