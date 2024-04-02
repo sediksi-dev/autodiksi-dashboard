@@ -1,11 +1,15 @@
 import streamlit as st
 import urllib.parse as urlparse
+import os
+from dotenv import load_dotenv
+
 
 import requests
 from requests.auth import HTTPBasicAuth
 from utils.state.seeder import SingleSeedArticle
 from utils.page_header import page_header
 
+load_dotenv()
 
 st.set_page_config(
     page_title="Generator - AGC Likrea Asisstant",
@@ -23,9 +27,9 @@ keyword = seeder.get("keyword")
 language = seeder.get("language")
 article = seeder.get("article_data")
 
-url = st.secrets["agc_api"]["url"]
-username = st.secrets["agc_api"]["username"]
-password = st.secrets["agc_api"]["password"]
+url = os.environ.get("AGC_API_URL")
+username = os.environ.get("AGC_API_USERNAME")
+password = os.environ.get("AGC_API_PASSWORD")
 
 
 full_url = (
