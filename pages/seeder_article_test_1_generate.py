@@ -43,8 +43,10 @@ if article:
         height: auto;
     }
     </style>\n\n"""
+    title = article["title"] if article["title"] else "No Title"
+    body = article["article"] if article["article"] else "No Article"
 
-    full_article = image_css + f"# {article['title']}\n\n{article['article']}"
+    full_article = image_css + f"# {title}\n{body}"
     view, raw = st.tabs(["View Article", "Raw"])
     view.markdown(full_article, unsafe_allow_html=True)
     with raw.container(height=400) as raw:
