@@ -60,7 +60,7 @@ else:
 
         if response.status_code == 200:
             data = response.json()
-            seeder.set("article_data", data)
+            seeder.set("article_data", data["data"])
             st.rerun()
         else:
             st.error("Failed to generate article")
