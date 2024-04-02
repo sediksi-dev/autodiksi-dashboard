@@ -1,0 +1,18 @@
+version: '1.0.0'
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: autodiksi-dashboard
+    restart: always
+    ports:
+      - ${STREAMLIT_PORT}:${STREAMLIT_PORT}
+    environment:
+      - STREAMLIT_PORT=${STREAMLIT_PORT}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - AGC_API_URL=${AGC_API_URL}
+      - AGC_API_USERNAME=${AGC_API_USERNAME}
+      - AGC_API_PASSWORD=${AGC_API_PASSWORD}

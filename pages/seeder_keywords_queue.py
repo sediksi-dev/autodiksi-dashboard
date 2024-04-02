@@ -24,7 +24,7 @@ try:
             "language": item["language"],
             "rewrite_date": item["rewrite_date"],
             "rewrite_mode": item["rewrite_mode"],
-            "target_web": item["web"]["url"],
+            "target_web": f"{item['web']['url']} ({item['web']['username']})",
             "category": item["taxonomy"]["taxonomy_name"],
         }
         for item in draft_keywords
@@ -84,7 +84,7 @@ try:
             "language": item["language"],
             "rewrite_date": item["rewrite_date"],
             "rewrite_mode": item["rewrite_mode"],
-            "target_web": item["web"]["url"],
+            "target_web": f"{item['web']['url']} ({item['web']['username']})",
             "category": item["taxonomy"]["taxonomy_name"],
         }
         for item in draft_keywords

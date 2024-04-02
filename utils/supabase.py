@@ -1,4 +1,5 @@
-import streamlit as st
+import os
+from dotenv import load_dotenv
 from typing import Union, List
 from supabase import create_client, Client
 from .supabase_models import (
@@ -10,11 +11,13 @@ from .supabase_models import (
     WebConfigData,
 )
 
+load_dotenv()
+
 
 class Supabase:
     def __init__(self):
-        self.__url: str = st.secrets["supabase"]["url"]
-        self.__key: str = st.secrets["supabase"]["key"]
+        self.__url: str = os.environ.get("SUPABASE_URL")
+        self.__key: str = os.environ.get("SUPABASE_KEY")
         self._client: Client = create_client(self.__url, self.__key)
 
 
