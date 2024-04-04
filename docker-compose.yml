@@ -8,7 +8,7 @@ services:
     container_name: autodiksi-dashboard
     restart: always
     ports:
-      - ${STREAMLIT_PORT}:${STREAMLIT_PORT}
+      - ${STREAMLIT_PORT}:8501
     environment:
       - STREAMLIT_PORT=${STREAMLIT_PORT}
       - SUPABASE_URL=${SUPABASE_URL}
