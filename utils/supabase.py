@@ -298,6 +298,7 @@ class SupaSeedKeywords(Supabase):
             "rewrite_mode",
             "status",
             "language",
+            "public_url",
             "web: target_id!inner(url,username)",
             "taxonomy: tax_id!inner(taxonomy_name)",
         )

@@ -64,4 +64,4 @@ with st.status("Memproses data...", expanded=False, state="running"):
     seeder.reset()
     st.cache_data.clear()
     time.sleep(5)
-    st.switch_page("pages/seeder_list_target.py")
+    st.switch_page("pages/seeder_keywords_queue.py")
