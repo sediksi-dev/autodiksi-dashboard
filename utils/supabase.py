@@ -291,7 +291,14 @@ class SupaSeedKeywords(Supabase):
         except Exception as e:
             return str(e)
 
-    def getAllWithChildren(self, status: str = None):
+    def getSpecific(
+        self,
+        status: str = None,
+        target: str = None,
+        per_page: int = 30,
+        page: int = 1,
+    ):
+
         query = (
             "keywords",
             "rewrite_date",
@@ -304,10 +311,15 @@ class SupaSeedKeywords(Supabase):
         )
 
         try:
-            response = self._client.table("seed_keywords").select(*query)
+            response = self._client.table("seed_keywords").select(*query, count="exact")
             if status:
                 response = response.eq("status", status)
+            if target:
+                response = response.like("web.url", f"%{target}%")
+
+            response = response.limit(per_page).offset((page - 1) * per_page)
+
             response = response.execute()
-            return response.data
+            return response.data, response.count
         except Exception as e:
             return str(e)

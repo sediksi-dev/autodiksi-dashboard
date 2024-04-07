@@ -1,30 +1,92 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from utils.page_header import page_header
 from utils.supabase import SupaSeedKeywords, SupaSeedTarget
 
+# Set page configuration
 st.set_page_config(
     page_title="Keyword Seeder - AGC Likrea Asisstant",
     page_icon=":robot:",
 )
 
+# Set page header
 page_header(
     title="Daftar Antrian Keyword",
     description="Masukkan keyword yang ingin diuji untuk melihat hasil penulisan konten",
 )
 
+# Initialize SupaSeedKeywords and SupaSeedTarget
 supa = SupaSeedKeywords()
 seed_target = SupaSeedTarget()
+
+# Get all targets
 target = seed_target.getAll()
 target = ["Semua"] + list(set([item["url"] for item in target]))
 
+# Initialize session state
+if "tp" not in st.session_state:
+    st.session_state.tp = {
+        "queue": 1,
+        "draft": 1,
+        "published": 1,
+        "error": 1,
+    }
 
-selected_target = st.selectbox("Pilih Web Target", target)
+
+# Define functions
+def reset_tp():
+    st.session_state.tp = {
+        "queue": 1,
+        "draft": 1,
+        "published": 1,
+        "error": 1,
+    }
 
 
-def displayTable(tab, status, selected_target="Semua"):
+def get_tp(status):
+    return st.session_state.tp.get(status, 1)
+
+
+def set_tp(status):
+    print(f"Set TP: {status}")
+    print(st.session_state[f"_page_{status}"])
+    st.session_state.tp[status] = st.session_state[f"_page_{status}"]
+
+
+def next_tp(status):
+    current = get_tp(status)
+    st.session_state.tp[status] = current + 1
+
+
+def prev_tp(status):
+    current = get_tp(status)
+    st.session_state.tp[status] = current - 1
+
+
+# Select target web
+selected_target = st.selectbox(
+    "Pilih Web Target", target, on_change=reset_tp, key="_target_web"
+)
+
+
+# Define function to display table
+def displayTable(tab, status, selected_target="Semua", page=1, page_size=50):
     try:
-        keywords = supa.getAllWithChildren(status=status)
+        if selected_target == "Semua":
+            target_web = None
+        else:
+            target_web = selected_target
+        keywords, count = supa.getSpecific(
+            status=status,
+            target=target_web,
+            page=page,
+            per_page=page_size,
+        )
+        max_page = count // page_size + 1
+
+        if not keywords or len(keywords) == 0 or count == 0:
+            raise Exception("Tidak ada data yang dapat ditampilkan")
+
         keywords = [
             {
                 "keywords": item["keywords"],
@@ -39,7 +101,7 @@ def displayTable(tab, status, selected_target="Semua"):
         ]
 
         df = pd.DataFrame(keywords).sort_values("rewrite_date", ascending=True)
-        df["number"] = range(1, len(df) + 1)
+        df["number"] = [i + (page_size * (page - 1)) for i in range(1, len(df) + 1)]
         display_columns = [
             "number",
             "keywords",
@@ -54,10 +116,7 @@ def displayTable(tab, status, selected_target="Semua"):
 
         df = df[display_columns]
 
-        # filter by `selected_target`
-        if selected_target != "Semua":
-            df = df[df["target_web"].str.contains(selected_target)]
-
+        tab.caption(f"Halaman {page} dari {max_page}. Total data: {count} item")
         tab.dataframe(
             df,
             hide_index=True,
@@ -94,14 +153,68 @@ def displayTable(tab, status, selected_target="Semua"):
                 ),
             },
         )
+
+        col1, col2, col3 = tab.columns([2, 1, 2])
+        col1.button(
+            "Prev",
+            on_click=prev_tp,
+            type="primary",
+            args=[status],
+            key=f"prev_{status}",
+            use_container_width=True,
+            disabled=get_tp(status) == 1,
+        )
+        col2.number_input(
+            "Halaman",
+            value=page,
+            min_value=1,
+            max_value=max_page,
+            step=1,
+            key=f"_page_{status}",
+            label_visibility="collapsed",
+            on_change=set_tp,
+            args=[status],
+        )
+
+        col3.button(
+            "Next",
+            on_click=next_tp,
+            type="primary",
+            args=[status],
+            key=f"next_{status}",
+            use_container_width=True,
+            disabled=get_tp(status) == max_page,
+        )
+
     except Exception as e:
-        tab.warning(f"Tidak ada data yang dapat ditampilkan: {e}")
+        tab.warning(f"Gagal menampilkan data: {e}")
 
 
+# Display tabs
 queueTab, draftTab, publishedTab, errorTab = st.tabs(
     ["Queue", "Draft", "Published", "Error"]
 )
-displayTable(queueTab, "queue", selected_target)
-displayTable(draftTab, "draft", selected_target)
-displayTable(publishedTab, "published", selected_target)
-displayTable(errorTab, "error", selected_target)
+displayTable(
+    queueTab,
+    "queue",
+    st.session_state._target_web,
+    page=get_tp("queue"),
+)
+displayTable(
+    draftTab,
+    "draft",
+    st.session_state._target_web,
+    page=get_tp("draft"),
+)
+displayTable(
+    publishedTab,
+    "published",
+    st.session_state._target_web,
+    page=get_tp("published"),
+)
+displayTable(
+    errorTab,
+    "error",
+    st.session_state._target_web,
+    page=get_tp("error"),
+)
