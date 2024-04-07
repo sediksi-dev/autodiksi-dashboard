@@ -51,7 +51,7 @@ with st.status("Memproses data...", expanded=False, state="running"):
     prepared_data = [
         {
             **item,
-            "rewrite_date": item["rewrite_date"].strftime("%Y-%m-%d %H:%M:%S"),
+            "rewrite_date": item["rewrite_date"].strftime("%Y-%m-%d %H:%M:%S+07"),
             "tax_id": get_tax_id(
                 item["tax_id"], seeder.get_config("target_id"), added_categories
             ),
