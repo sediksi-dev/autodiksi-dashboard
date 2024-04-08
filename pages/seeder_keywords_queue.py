@@ -133,6 +133,7 @@ def displayTable(tab, status, selected_target="Semua", page=1, page_size=50):
                 "rewrite_date": st.column_config.DatetimeColumn(
                     "Tanggal Rewrite",
                     format="DD-MM-YYYY HH:mm",
+                    timezone="Asia/Jakarta",
                     help="Tanggal terakhir artikel di-rewrite",
                 ),
                 "rewrite_mode": st.column_config.TextColumn(

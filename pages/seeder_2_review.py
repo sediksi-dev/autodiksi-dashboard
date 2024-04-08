@@ -112,10 +112,11 @@ st.dataframe(
         "keywords": st.column_config.TextColumn(
             "Kata Kunci",
         ),
-        "rewrite_date": st.column_config.DateColumn(
+        "rewrite_date": st.column_config.DatetimeColumn(
             "Tanggal Publikasi",
             help="Tanggal dan waktu publikasi artikel",
             format="DD-MM-YYYY HH:mm:ss",
+            timezone="Asia/Jakarta",
         ),
         "language": st.column_config.TextColumn(
             "Bahasa",
